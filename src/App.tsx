@@ -2,14 +2,22 @@ import './App.css';
 import { Input, Typography, Button } from 'antd';
 import { OilUnit } from './components/OilUnit';
 import Oil from './components/Oil';
-import oilList from './oil.json'
+import oilListJson from './oil.json'
+
+const { Title, Text } = Typography;
+let oilList: Array<Oil> = [];
 
 function App() {
-  const { Title, Text } = Typography;
+  oilList = [];
+
+  oilListJson.forEach(oil => {
+    oilList.push(new Oil(oil.name, oil.price))
+  })
+
   return (
     <div className="App">
-      <Title>油量總量</Title>
-      <Input id='total' type="text"></Input>
+      <Title >油量總量</Title>
+      <Input id='resultTotalWeight' type="text"></Input>
       <Text> k</Text>
       <div id='oilUnitContainer' className='container'>
         {oilList.map((oil, index) => {
@@ -17,16 +25,39 @@ function App() {
         })}
       </div>
       <Button className='button' onClick={calculate}>顯示結果</Button>
-      <Input id='result' className='result'></Input>
+      <div id="result" className='result'>
+      </div>
+
     </div>
   );
 }
 
 function calculate() {
+  const resultTotalWeight = (window.document.getElementById("resultTotalWeight") as any).value;
+  const result = (window.document.getElementById("result") as any);
+
+  result.innerHTML = "";
+
+  let totalOilWeight = 0;
+  let totalNaohWeight = 0;
+  let totalWaterWeight = 0;
+
   oilList.forEach((oil, index) => {
-    console.log(window.document.getElementById(`OilUnit${index}`));
-      
+    oil.weight = Number((window.document.getElementById(`OilUnit${index}`) as any).getElementsByTagName('*')[1].value);
+    oil.naoh = oil.weight * oil.price;
+    totalOilWeight += oil.weight;
+    totalNaohWeight += oil.naoh;
   });
+  totalWaterWeight = (totalNaohWeight / 0.3) - totalNaohWeight;
+
+  let tempTotal = totalOilWeight + totalNaohWeight + totalWaterWeight;
+  let multiple = 100 / tempTotal * resultTotalWeight / 100;
+
+  oilList.forEach(oil => {
+    result.innerHTML += `${oil.name}:${Math.round(oil.weight * multiple)}<br>`
+  });
+  result.innerHTML += `氫氧化鈉:${Math.round(totalNaohWeight * multiple)}<br>`;
+  result.innerHTML += `水:${Math.round(totalWaterWeight * multiple)}<br>`;
 }
 
 export default App;
