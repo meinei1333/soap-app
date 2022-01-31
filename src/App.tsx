@@ -3,6 +3,7 @@ import { Input, Typography, Button } from 'antd';
 import { OilUnit } from './components/OilUnit';
 import Oil from './components/Oil';
 import oilListJson from './oil.json'
+import { useContext } from 'react';
 
 const { Title, Text } = Typography;
 let oilList: Array<Oil> = [];
@@ -35,6 +36,20 @@ function App() {
 function calculate() {
   const resultTotalWeight = (window.document.getElementById("resultTotalWeight") as any).value;
   const result = (window.document.getElementById("result") as any);
+
+  let totalPercentage = 0;
+  oilList.forEach((oil, index) => {
+    totalPercentage += Number((window.document.getElementById(`OilUnit${index}`) as any).getElementsByTagName('*')[1].value);
+  });
+  if (totalPercentage !== 99 && totalPercentage !== 100) {
+    window.alert("It's must total 100% or 99%");
+    return;
+  }
+
+  if (resultTotalWeight === "") {
+    window.alert("油量總量不可為空白");
+    return;
+  }
 
   result.innerHTML = "";
 
