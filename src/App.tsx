@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div className="App">
-      <Title >油量總量</Title>
+      <Title >全部重量</Title>
       <Input id='resultTotalWeight' type="text"></Input>
       <Text> k</Text>
       <div id='oilUnitContainer' className='container'>
