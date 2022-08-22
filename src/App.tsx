@@ -42,7 +42,7 @@ function calculate() {
     totalPercentage += Number((window.document.getElementById(`OilUnit${index}`) as any).getElementsByTagName('*')[1].value);
   });
   if (totalPercentage !== 99 && totalPercentage !== 100) {
-    window.alert("It's must total 100% or 99%");
+    window.alert("It's must total 100% or biger than 99%");
     return;
   }
 
@@ -69,7 +69,9 @@ function calculate() {
   let multiple = 100 / tempTotal * resultTotalWeight / 100;
 
   oilList.forEach(oil => {
-    result.innerHTML += `${oil.name}:${Math.round(oil.weight * multiple)}<br>`
+    if(oil.weight!=0){
+    result.innerHTML += `${oil.name}:${Math.round(oil.weight * multiple)}<br>`;
+  }
   });
   result.innerHTML += `氫氧化鈉:${Math.round(totalNaohWeight * multiple)}<br>`;
   result.innerHTML += `水:${Math.round(totalWaterWeight * multiple)}<br>`;
